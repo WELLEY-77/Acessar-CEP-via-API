@@ -1,3 +1,6 @@
+import requests
+
+
 class BuscarEndereco():
     def __init__(self, cep):
         cep = str(cep)
@@ -14,7 +17,17 @@ class BuscarEndereco():
     
     def format_cep(self):
         return f'{self.cep[:5]}-{self.cep[5:]}'
-    
+
+    def acesso_via_cep(self):
+        url = f'http://viacep.com.br/ws/{self.cep}/json/'
+        r = requests.get(url)
+        dados = r.json()
+        return (
+             dados['bairro'],
+             dados['localidade'],
+             dados['uf'],
+             dados['logradouro'],
+        )
 
     def __str__(self):
         return self.format_cep()
@@ -22,5 +35,5 @@ class BuscarEndereco():
 
 
 object_cep = BuscarEndereco('62540970')
-
-print(object_cep)
+bairro, localidade, uf, logradouro = object_cep.acesso_via_cep()
+print(f'{bairro}, {localidade}-{uf}, {logradouro}')
